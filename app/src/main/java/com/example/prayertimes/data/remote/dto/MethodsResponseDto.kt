@@ -8,7 +8,7 @@ data class MethodsResponseDto(
     val code: Int? = null,
 
     @field:SerializedName("data")
-    val data: Data? = null,
+    val prayerTimesData: PrayerTimesData? = null,
 
     @field:SerializedName("status")
     val status: String? = null

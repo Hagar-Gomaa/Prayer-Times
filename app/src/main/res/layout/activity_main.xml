@@ -22,7 +22,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navGraph="@navigation/nav_grav"
-            tools:layout="@layout/fragment_home" />
+            tools:layout="@layout/fragment_methods" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
