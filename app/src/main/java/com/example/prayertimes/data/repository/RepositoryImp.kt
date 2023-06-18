@@ -1,6 +1,5 @@
 package com.example.prayertimes.data.repository
 
-import com.example.prayertimes.data.remote.dto.PrayerTimesDto
 import com.example.prayertimes.data.remote.mapper.MethodsDtoToEntityMapper
 import com.example.prayertimes.data.remote.mapper.PrayerTimesDtoToEntityMapper
 import com.example.prayertimes.data.remote.service.PrayerTimesService

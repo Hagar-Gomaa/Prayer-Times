@@ -159,7 +159,7 @@ data class Date(
 data class PrayerTimesParams(
 
     @field:SerializedName("Isha")
-    val isha: Int? = null,
+    val isha: String? = null,
 
     @field:SerializedName("Fajr")
     val fajr: Int? = null
