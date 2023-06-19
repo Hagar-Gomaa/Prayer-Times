@@ -63,7 +63,6 @@
                         android:id="@+id/date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="lllll"
                         android:textColor="@color/white"
                         android:textSize="20sp"
 
@@ -79,7 +78,6 @@
                         android:ellipsize="end"
                         android:gravity="center_horizontal"
                         android:maxLines="1"
-                        android:text="kkkkkk"
                         android:textColor="@color/white"
                         android:textSize="20sp"
                         app:layout_constraintEnd_toStartOf="@+id/next"
@@ -185,33 +183,35 @@
 
         </androidx.cardview.widget.CardView>
 
+
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/recycler_view_pager"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="400dp"
             android:padding="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/salat_table" />
+            app:layout_constraintTop_toBottomOf="@+id/salat_table"
+            app:layout_constraintVertical_bias="0.052" />
+
+        <Button
+            android:id="@+id/qibla"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="5dp"
+            android:textSize="13sp"
+            android:textColor="@color/white"
+            android:background="@drawable/ic_face"
+            android:text="@string/show_qibla_diriction_on_map"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recycler_view_pager" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <!--    <Button-->
-    <!--        android:id="@+id/qibla"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:elevation="5dp"-->
-    <!--        android:textSize="13sp"-->
-    <!--        android:textColor="@color/white"-->
-    <!--        android:onClick="@{()->fragment.qibalScreen()}"-->
-    <!--        android:background="@drawable/face"-->
-    <!--        android:text="@string/show_qibla_diriction_on_map"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/salat_table" />-->
 
 
 </layout>

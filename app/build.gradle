@@ -97,7 +97,9 @@ dependencies {
 
     // recycler-view-pager dependency
  //   implementation 'com.github.prayagdesai:recycler-view-pager:2.1.0'
-//    implementation 'com.github.derysudrajat:compass-qibla:1.0.0'
-//    implementation 'com.google.android.gms:play-services-location:21.0.1'
+
+    implementation files('libs/compass-qibla')
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
+
 
 }

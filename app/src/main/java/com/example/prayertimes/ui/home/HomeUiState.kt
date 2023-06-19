@@ -14,11 +14,7 @@ data class HomeUiState(
         "",
         "",
         "",
-        "",
-        "",
-        "",
-        "",
-        ""
+
     ),
     val methods: MethodsUiState = MethodsUiState(
         Pair(0, ""),
@@ -41,17 +37,13 @@ data class HomeUiState(
     )
 ) {
     data class PrayerTimesUiState(
-        val sunset: String,
         val asr: String,
         val isha: String,
         val fajr: String,
         val dhuhr: String,
         val maghrib: String,
-        val lastthird: String,
-        val firstthird: String,
         val sunrise: String,
-        val midnight: String,
-        val imsak: String
+
     )
 
     data class MethodsUiState(
