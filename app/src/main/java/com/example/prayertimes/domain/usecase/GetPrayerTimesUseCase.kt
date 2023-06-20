@@ -29,6 +29,8 @@ class GetPrayerTimesUseCase @Inject constructor(
         val prayerTimesUseCaseEntity = repository.getPrayTimes(date, latitude, longitude, methodId)
        repository.insertPrayerTimesDataBase(prayerTimesUseCaseEntity)
         Log.e("prayDataBaseEntity",prayerTimesUseCaseEntity.toString()+111111111111111111)
+       val p = repository.getAllPrayerTimesDataBase()
+        Log.e("getAllPrayerTimesDataBase",p.toString()+111111111111111111)
         return prayerTimesUseCaseEntity
     }
 
@@ -110,7 +112,7 @@ class GetPrayerTimesUseCase @Inject constructor(
         }
 
         // Convert the difference back to hours and minutes
-        var hours = diffMinutes / 60
+        val hours = diffMinutes / 60
         val minutes = diffMinutes % 60
         Log.e("StartTime", "$startTime")
         Log.e("EndTime", "$endTime")

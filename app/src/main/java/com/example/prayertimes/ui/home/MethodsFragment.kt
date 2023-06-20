@@ -13,6 +13,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.prayertimes.R
 import com.example.prayertimes.databinding.FragmentMethodsBinding
@@ -20,9 +21,11 @@ import com.example.prayertimes.ui.base.BaseFragment
 import com.example.prayertimes.ui.home.Location.LocationData
 import com.example.prayertimes.ui.home.methos.MethodsItem
 import com.example.prayertimes.ui.home.methos.SpinnerAdapter
+import com.example.prayertimes.utils.Connection
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.Locale
 
@@ -47,13 +50,32 @@ class MethodsFragment : BaseFragment<FragmentMethodsBinding, HomeUiState, HomeUi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requestPermissionLocation()
-        setData()
-        selectMethod()
-        submit()
-//            spinnerSelect()
+        if (Connection.isOnline(requireContext())) {
+            requestPermissionLocation()
+            setData()
+            selectMethod()
+            submit()
+        } else if (!Connection.isOnline(requireContext())) {
 
+            lifecycleScope.launch {
+                viewModel.getPrayerTimesDatBase().first().let {
+                    locationData = LocationData(
+                        it.latitude!!.toDouble(),
+                        it.longitude!!.toDouble(),
+                        it.address ?: "",
+                        it.address ?: "",
+                        it.address ?: ""
+                    )
+                    methodId = it.methodId!!.toInt()
+                }
+                spinnerList = listOf(MethodsItem(item = Pair(2, "qater")))
+                setSpinnerAdapter(spinnerList)
+                binding.spinner.adapter = spinnerAdapter
+                selectMethod()
+                submit()
 
+            }
+        }
     }
 
     private fun setData() {
@@ -187,7 +209,6 @@ class MethodsFragment : BaseFragment<FragmentMethodsBinding, HomeUiState, HomeUi
 
 
     private fun selectMethod() {
-
         binding.spinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,

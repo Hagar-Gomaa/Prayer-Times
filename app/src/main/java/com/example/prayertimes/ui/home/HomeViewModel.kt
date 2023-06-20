@@ -6,11 +6,13 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
 import com.example.prayertimes.domain.entities.MethodsEntity
 import com.example.prayertimes.domain.entities.PrayerTimesEntity
+import com.example.prayertimes.domain.usecase.GetLocalPrayerTimesUseCase
 import com.example.prayertimes.domain.usecase.GetMethodsUseCase
 import com.example.prayertimes.domain.usecase.GetPrayerTimesUseCase
 import com.example.prayertimes.ui.base.BaseViewModel
 import com.example.prayertimes.ui.mapper.MethodsEntityToUiMapper
 import com.example.prayertimes.ui.mapper.PrayerTimesEntityToUiMapper
+import com.example.prayertimes.ui.mapper.PrayerTimesLocalEntityToUiMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -20,11 +22,13 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getMethodsUseCase: GetMethodsUseCase,
     private val getPrayerTimesUseCase: GetPrayerTimesUseCase,
+    private val getLocalPrayerTimesUseCase: GetLocalPrayerTimesUseCase,
     private val methodsMapper: MethodsEntityToUiMapper,
-    private val prayerTimesEntityToUiMapper: PrayerTimesEntityToUiMapper
+    private val prayerTimesEntityToUiMapper: PrayerTimesEntityToUiMapper,
+    private val prayerTimesLocalEntityToUiMapper: PrayerTimesLocalEntityToUiMapper
 ) :
     BaseViewModel<HomeUiState, HomeUiEvent>(
-        HomeUiState()
+        HomeUiState(timeLeft = "")
     ), HomeListener {
 
     init {
@@ -130,6 +134,9 @@ class HomeViewModel @Inject constructor(
         _state.update {
             it.copy(error = listOf(e.message.toString()))
         }
+    }
+   suspend fun getPrayerTimesDatBase():List<HomeUiState> {
+      return prayerTimesLocalEntityToUiMapper.map(getLocalPrayerTimesUseCase())
     }
 
     override fun onClickArrowBack() {

@@ -12,12 +12,9 @@ interface PrayTimesDao {
     suspend fun insert(prayDataBaseEntity: PrayDataBaseEntity)
 
     @Query(
-        "SELECT * FROM Pray_times_table  WHERE date " +
-                "==:data and latitude==:latitude and longitude==:longitude and id==:method"
+        "SELECT * FROM Pray_times_table"
     )
-    fun getAllPrayTimes(
-        data: String, latitude: Double, longitude: Double, method: Int
-    ): PrayDataBaseEntity
+   suspend fun getAllPrayTimes(): List<PrayDataBaseEntity>
 //    @Delete(" DELETE * FROM Pray_times_table")
 //    fun clear(){
 //
