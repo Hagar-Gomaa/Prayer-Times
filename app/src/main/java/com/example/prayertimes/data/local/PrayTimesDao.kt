@@ -12,7 +12,7 @@ interface PrayTimesDao {
     suspend fun insert(prayDataBaseEntity: PrayDataBaseEntity)
 
     @Query(
-        "SELECT * FROM Pray_times_table  WHERE readable " +
+        "SELECT * FROM Pray_times_table  WHERE date " +
                 "==:data and latitude==:latitude and longitude==:longitude and id==:method"
     )
     fun getAllPrayTimes(

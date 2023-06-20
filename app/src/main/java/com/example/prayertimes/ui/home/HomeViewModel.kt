@@ -1,6 +1,8 @@
 package com.example.prayertimes.ui.home
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
 import com.example.prayertimes.domain.entities.MethodsEntity
 import com.example.prayertimes.domain.entities.PrayerTimesEntity
@@ -24,7 +26,44 @@ class HomeViewModel @Inject constructor(
     BaseViewModel<HomeUiState, HomeUiEvent>(
         HomeUiState()
     ), HomeListener {
-    suspend fun getMethods() {
+
+   init {
+       getCurrentTime()
+       getCurrentDate()
+       getDateListForWeek()
+   }
+    private fun getDateListForWeek() {
+       _state.update {
+           it.copy(dateForWeek  =getPrayerTimesUseCase.getDateListForWeek())
+       }
+    }
+fun getNextPrayerData(prayerTimesUiState: HomeUiState.PrayerTimesUiState) {
+    _state.update {
+        it.copy(nextPrayer  = getPrayerTimesUseCase.getNextPrayer(prayerTimesUiState).first,
+            nextPrayerTime  = getPrayerTimesUseCase.getNextPrayer(prayerTimesUiState).second)
+
+    }
+}
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getTimeLeft(currentTime:String, nextPrayerTime:String){
+        _state.update {
+            it.copy(timeLeft = getPrayerTimesUseCase.calculateTimeDifference(currentTime,nextPrayerTime))
+        }
+    }
+    private fun getCurrentDate(){
+       _state.update {
+           it.copy(date = getPrayerTimesUseCase.getCurrentDate())
+       }
+    }
+
+
+    private fun getCurrentTime(){
+        _state.update {
+            it.copy(currentTime = getPrayerTimesUseCase.getCurrentTime())
+        }
+    }
+
+        suspend fun getMethods() {
         val data: MethodsEntity = getMethodsUseCase()
         Log.e("Home ViewModel", data.gulf.second + data.maka.first)
         tryToExecute(
@@ -50,6 +89,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun getPrayerTimes(date: String, latitude: Double, longitude: Double, methodId: Int) {
         val data: PrayerTimesEntity = getPrayerTimesUseCase(date, latitude, longitude, methodId)
         Log.e("Home ViewModel", data.timings.toString())
@@ -61,10 +101,15 @@ class HomeViewModel @Inject constructor(
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun onSuccessGetPrayerTimes(prayerTimesUiState: HomeUiState.PrayerTimesUiState) {
         _state.update {
             it.copy(prayerTimes = prayerTimesUiState, isLoading = false)
         }
+        getNextPrayerData(prayerTimesUiState)
+        val currentTime =state.value.currentTime!!
+        val nextPrayerTime = state.value.nextPrayerTime!!
+        getTimeLeft(currentTime,nextPrayerTime)
     }
 
     private fun onErrorGetPrayerTimes(e: Throwable) {

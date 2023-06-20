@@ -7,6 +7,12 @@ import com.google.gson.annotations.SerializedName
 data class HomeUiState(
     val isLoading: Boolean = false,
     val error: List<String>? = null,
+    val currentTime: String? = null,
+    val nextPrayer: String? = null,
+    val nextPrayerTime: String? = null,
+    val timeLeft: String? = null,
+    val date: String? = null,
+    val dateForWeek: List<String>? = null,
     val prayerTimes: PrayerTimesUiState = PrayerTimesUiState(
         "",
         "",
