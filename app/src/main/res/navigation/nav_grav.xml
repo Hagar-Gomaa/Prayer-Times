@@ -21,9 +21,13 @@
     </fragment>
     <fragment
         android:id="@+id/qiblaFragment"
-        android:name="com.example.prayertimes.QiblaFragment"
+        android:name="com.example.prayertimes.ui.qibla.QiblaFragment"
         android:label="fragment_qibla"
-        tools:layout="@layout/fragment_qibla" />
+        tools:layout="@layout/fragment_qibla" >
+        <argument
+            android:name="locationdata"
+            app:argType="com.example.prayertimes.ui.home.Location.LocationData" />
+    </fragment>
     <fragment
         android:id="@+id/methodsFragment"
         android:name="com.example.prayertimes.ui.home.MethodsFragment"

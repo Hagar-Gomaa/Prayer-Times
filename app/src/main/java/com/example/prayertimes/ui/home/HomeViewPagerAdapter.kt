@@ -9,7 +9,7 @@ import androidx.viewpager.widget.PagerAdapter
 import com.example.prayertimes.R
 import com.example.prayertimes.databinding.ItemPrayersTimesBinding
 
-class HomeViewPagerAdapter(val data: List<HomeUiState.PrayerTimesUiState>) :
+class HomeViewPagerAdapter(private val list: List<HomeUiState.PrayerTimesUiState>) :
     PagerAdapter() {
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -20,7 +20,7 @@ class HomeViewPagerAdapter(val data: List<HomeUiState.PrayerTimesUiState>) :
             container,
             false
         )
-        val model: HomeUiState.PrayerTimesUiState = data[position]
+        val model: HomeUiState.PrayerTimesUiState = list[position]
         binding.item = model
         binding.executePendingBindings()
         container.addView(binding.root)
@@ -33,7 +33,7 @@ class HomeViewPagerAdapter(val data: List<HomeUiState.PrayerTimesUiState>) :
     }
 
     override fun getCount(): Int {
-        return data.size
+        return list.size
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {

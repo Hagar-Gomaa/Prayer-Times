@@ -9,6 +9,6 @@ import javax.inject.Inject
 
 class PrayerTimesDtoToEntityMapper @Inject constructor() : Mapper<PrayerTimesDto, PrayerTimesEntity> {
     override fun map(input: PrayerTimesDto): PrayerTimesEntity {
-        return PrayerTimesEntity(input.prayerTimesData?: PrayerTimesData(),input.prayerTimesData?.timings?: Timings())
+        return PrayerTimesEntity(input.prayerTimesData?.date?.readable.toString(),input.prayerTimesData?: PrayerTimesData(),input.prayerTimesData?.timings?: Timings())
     }
 }

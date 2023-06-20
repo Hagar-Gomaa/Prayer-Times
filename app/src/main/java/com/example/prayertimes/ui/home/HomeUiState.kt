@@ -2,11 +2,20 @@ package com.example.prayertimes.ui.home
 
 import com.example.prayertimes.data.remote.dto.PrayerTimesData
 import com.google.gson.annotations.SerializedName
+import java.net.Inet4Address
 
 
 data class HomeUiState(
     val isLoading: Boolean = false,
     val error: List<String>? = null,
+    val currentTime: String? = null,
+    val nextPrayer: String? = null,
+    val nextPrayerTime: String? = null,
+    val timeLeft: String? = null,
+    val date: String? = null,
+    val dateHijri: String? = null,
+    val dateForWeek: List<String>? = null,
+    val address: String?=null,
     val prayerTimes: PrayerTimesUiState = PrayerTimesUiState(
         "",
         "",
@@ -14,11 +23,7 @@ data class HomeUiState(
         "",
         "",
         "",
-        "",
-        "",
-        "",
-        "",
-        ""
+
     ),
     val methods: MethodsUiState = MethodsUiState(
         Pair(0, ""),
@@ -41,17 +46,13 @@ data class HomeUiState(
     )
 ) {
     data class PrayerTimesUiState(
-        val sunset: String,
         val asr: String,
         val isha: String,
         val fajr: String,
         val dhuhr: String,
         val maghrib: String,
-        val lastthird: String,
-        val firstthird: String,
         val sunrise: String,
-        val midnight: String,
-        val imsak: String
+
     )
 
     data class MethodsUiState(
