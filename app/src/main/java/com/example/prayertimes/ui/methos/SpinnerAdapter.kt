@@ -1,4 +1,4 @@
-package com.example.prayertimes.ui.home.methos
+package com.example.prayertimes.ui.methos
 
 import android.view.LayoutInflater
 import android.view.View

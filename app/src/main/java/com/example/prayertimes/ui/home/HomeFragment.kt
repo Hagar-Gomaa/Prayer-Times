@@ -44,7 +44,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUiState, HomeUiEvent>
     private lateinit var dateListForWeek: List<String>
     private val prayerTimesListDisplayForWeek = mutableListOf<HomeUiState.PrayerTimesUiState>()
     private val prayerTimesLocalListDisplayForWeek = mutableListOf<HomeUiState.PrayerTimesUiState>()
-
+ private lateinit var dataBaseData :List<HomeUiState>
 
     override val layoutIdFragment: Int
         get() = R.layout.fragment_home
@@ -92,7 +92,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUiState, HomeUiEvent>
         } else if(!Connection.isOnline(requireContext()))
         {  Log.e("Connection ","false")
             lifecycleScope.launch {
-              viewModel.getPrayerTimesDatBase().forEach {
+                dataBaseData = viewModel.getPrayerTimesDatBase()
+                binding.date.text=dataBaseData[0].date
+                binding.location.text=homeFragmentArgs.locationData.city+","+homeFragmentArgs.locationData.country
+                    viewModel.getPrayerTimesDatBase().forEach {
                     prayerTimesLocalListDisplayForWeek.add(it.prayerTimes)
                 }
                 setViewPagerAdapter(prayerTimesLocalListDisplayForWeek )
@@ -136,15 +139,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUiState, HomeUiEvent>
     private fun clickBackButton() {
         lifecycleScope.launch {
             val currentPosition: Int = binding.recyclerViewPager.currentItem
-            if (currentPosition > 0 && prayerTimesListDisplayForWeek.size < 8) {
+            if (currentPosition > 0 && prayerTimesListDisplayForWeek.size < 8 &&Connection.isOnline(requireContext())) {
                 binding.date.text = viewModel.state.value.date!!
                 getPrayerTimesDataForWeek(date)
                 setViewPagerAdapter(prayerTimesListDisplayForWeek)
                 binding.recyclerViewPager.currentItem = (currentPosition - 1)
                 pagerAdapter.notifyDataSetChanged()
 
-            } else if (currentPosition < 6 && prayerTimesListDisplayForWeek.size == 8) {
+            } else if (currentPosition < 6 && prayerTimesListDisplayForWeek.size == 8 &&Connection.isOnline(requireContext())) {
                 swipeViewPagerBack()
+            }else if (currentPosition in 1..5 &&!Connection.isOnline(requireContext())){
+                date = dataBaseData[currentPosition - 1].date!!
+                swipeViewPagerBack()
+
             }
         }
 
@@ -154,21 +161,30 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUiState, HomeUiEvent>
     private fun clickNextButton() {
         lifecycleScope.launch {
             val currentPosition: Int = binding.recyclerViewPager.currentItem
-            if (currentPosition < 6 && prayerTimesListDisplayForWeek.size < 8) {
+            if (currentPosition < 6 && prayerTimesListDisplayForWeek.size < 8&&Connection.isOnline(requireContext())) {
                 date = dateListForWeek[currentPosition + 1]
                 binding.date.text = viewModel.state.value.date!!
                 getPrayerTimesDataForWeek(date)
                 setViewPagerAdapter(prayerTimesListDisplayForWeek)
                 binding.recyclerViewPager.currentItem = (currentPosition + 1)
                 pagerAdapter.notifyDataSetChanged()
-            } else if (currentPosition < 6 && prayerTimesListDisplayForWeek.size == 8) {
+            } else if (currentPosition < 6 && prayerTimesListDisplayForWeek.size == 8&&Connection.isOnline(requireContext())) {
                 date = dateListForWeek[currentPosition + 1]
                 binding.date.text = viewModel.state.value.date!!
                 swipeViewPagerNext()
+            }else if (currentPosition < 5 && !Connection.isOnline(requireContext())){
+                goNextByLocal(currentPosition)
             }
 
         }
 
+    }
+
+    private fun goNextByLocal(currentPosition: Int) {
+        date = dataBaseData[currentPosition + 1].date!!
+        binding.date.text = date
+        binding.recyclerViewPager.currentItem = (currentPosition + 1)
+        pagerAdapter.notifyDataSetChanged()
     }
 
 
