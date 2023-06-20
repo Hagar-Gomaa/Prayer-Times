@@ -37,9 +37,12 @@ class RepositoryImp @Inject constructor(
         mapToDataBaseEntity(prayerTimesEntity).let {
             dao.insert(it)
             Log.e("prayDataBaseEntity",it.toString())
-
         }
     }
+
+    override suspend fun getAllPrayerTimesDataBase(): List<PrayDataBaseEntity> {
+return dao.getAllPrayTimes()   }
+
     private fun mapToDataBaseEntity(prayerTimesUseCaseEntity: PrayerTimesEntity): PrayDataBaseEntity {
         return PrayDataBaseEntity(
             id = prayerTimesUseCaseEntity.id,

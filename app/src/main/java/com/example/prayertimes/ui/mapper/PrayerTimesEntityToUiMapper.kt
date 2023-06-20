@@ -18,7 +18,7 @@ class PrayerTimesEntityToUiMapper @Inject constructor() :
                 dhuhr = input.timings.dhuhr.toString(),
                 maghrib = input.timings.maghrib.toString()
             ), date = input.date.date?.readable,
-            dateHijri = input.date.date?.hijri?.day+" " + input.date.date?.hijri?.month?.ar +" "+ input.date.date?.hijri?.year
+            timeLeft = "", dateHijri = input.date.date?.hijri?.day+" " + input.date.date?.hijri?.month?.ar +" "+ input.date.date?.hijri?.year
         )
     }
 }

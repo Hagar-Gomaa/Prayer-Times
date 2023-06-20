@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.prayertimes.R
 import com.example.prayertimes.databinding.FragmentHomeBinding
 import com.example.prayertimes.ui.base.BaseFragment
+import com.example.prayertimes.utils.Connection
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
@@ -33,7 +34,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUiState, HomeUiEvent>
     private lateinit var address: String
     private lateinit var timeLeft: String
     private lateinit var date: String
-
+    private var connection = false
 
     private var v: HomeUiState.PrayerTimesUiState? = null
     private var methodId by Delegates.notNull<Int>()
@@ -42,6 +43,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUiState, HomeUiEvent>
 
     private lateinit var dateListForWeek: List<String>
     private val prayerTimesListDisplayForWeek = mutableListOf<HomeUiState.PrayerTimesUiState>()
+    private val prayerTimesLocalListDisplayForWeek = mutableListOf<HomeUiState.PrayerTimesUiState>()
+
 
     override val layoutIdFragment: Int
         get() = R.layout.fragment_home
@@ -66,23 +69,35 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUiState, HomeUiEvent>
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        methodId = homeFragmentArgs.methodId
-        latitude = homeFragmentArgs.locationData.latitudeOfRegion
-        longitude = homeFragmentArgs.locationData.longitudeOfRegion
-        address = homeFragmentArgs.locationData.city + "," + homeFragmentArgs.locationData.country
+        connection = Connection.isOnline(requireContext())
+        if (connection) {
+            methodId = homeFragmentArgs.methodId
+            latitude = homeFragmentArgs.locationData.latitudeOfRegion
+            longitude = homeFragmentArgs.locationData.longitudeOfRegion
+            address =
+                homeFragmentArgs.locationData.city + "," + homeFragmentArgs.locationData.country
 
-        lifecycleScope.launch {
-            dateListForWeek = viewModel.state.value.dateForWeek!!
-            getPrayerTimesDataForWeek(viewModel.getCurrentDate().toString())
-            date = viewModel.state.value.date!!
-            nextPrayer = viewModel.state.value.nextPrayer!!
-            timeLeft = viewModel.state.value.timeLeft!!
-            binding.date.text = date
-            binding.location.text = address
-            setViewPagerAdapter(prayerTimesListDisplayForWeek)
+            lifecycleScope.launch {
+                dateListForWeek = viewModel.state.value.dateForWeek!!
+                getPrayerTimesDataForWeek(viewModel.getCurrentDate().toString())
+                setViewPagerAdapter(prayerTimesListDisplayForWeek)
+                goToQiblaScreen()
+                date = viewModel.state.value.date!!
+                nextPrayer = viewModel.state.value.nextPrayer!!
+                timeLeft = viewModel.state.value.timeLeft
+                binding.date.text = date
+                binding.location.text = address
 
+            }
+        } else if(!Connection.isOnline(requireContext()))
+        {  Log.e("Connection ","false")
+            lifecycleScope.launch {
+              viewModel.getPrayerTimesDatBase().forEach {
+                    prayerTimesLocalListDisplayForWeek.add(it.prayerTimes)
+                }
+                setViewPagerAdapter(prayerTimesLocalListDisplayForWeek )
+            }
         }
-        goToQiblaScreen()
     }
 
     @SuppressLint("SuspiciousIndentation")

@@ -1,9 +1,5 @@
 package com.example.prayertimes.ui.home
 
-import com.example.prayertimes.data.remote.dto.PrayerTimesData
-import com.google.gson.annotations.SerializedName
-import java.net.Inet4Address
-
 
 data class HomeUiState(
     val isLoading: Boolean = false,
@@ -11,11 +7,16 @@ data class HomeUiState(
     val currentTime: String? = null,
     val nextPrayer: String? = null,
     val nextPrayerTime: String? = null,
-    val timeLeft: String? = null,
+    val timeLeft: String,
     val date: String? = null,
     val dateHijri: String? = null,
     val dateForWeek: List<String>? = null,
     val address: String?=null,
+    val latitude: String?=null,
+    val longitude: String?=null,
+    val methodId: String?=null,
+
+
     val prayerTimes: PrayerTimesUiState = PrayerTimesUiState(
         "",
         "",
