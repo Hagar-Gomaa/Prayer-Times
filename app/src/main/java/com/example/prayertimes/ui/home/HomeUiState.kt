@@ -2,6 +2,7 @@ package com.example.prayertimes.ui.home
 
 import com.example.prayertimes.data.remote.dto.PrayerTimesData
 import com.google.gson.annotations.SerializedName
+import java.net.Inet4Address
 
 
 data class HomeUiState(
@@ -12,7 +13,9 @@ data class HomeUiState(
     val nextPrayerTime: String? = null,
     val timeLeft: String? = null,
     val date: String? = null,
+    val dateHijri: String? = null,
     val dateForWeek: List<String>? = null,
+    val address: String?=null,
     val prayerTimes: PrayerTimesUiState = PrayerTimesUiState(
         "",
         "",

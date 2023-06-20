@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.prayertimes.data.local.PrayDataBaseEntity
+import com.example.prayertimes.data.local.dataBaseEntity.PrayDataBaseEntity
 
 @Dao
 interface PrayTimesDao {
@@ -18,4 +18,8 @@ interface PrayTimesDao {
     fun getAllPrayTimes(
         data: String, latitude: Double, longitude: Double, method: Int
     ): PrayDataBaseEntity
+//    @Delete(" DELETE * FROM Pray_times_table")
+//    fun clear(){
+//
+//    }
 }

@@ -4,7 +4,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.prayerstimes.data.local.PrayTimesDao
-import com.example.prayertimes.data.local.PrayDataBaseEntity
+import com.example.prayertimes.data.local.dataBaseEntity.PrayDataBaseEntity
 import com.example.prayertimes.domain.Repository
 import com.example.prayertimes.domain.entities.PrayerTimesEntity
 import com.example.prayertimes.ui.home.HomeUiState
@@ -17,8 +17,7 @@ import java.util.Locale
 import javax.inject.Inject
 
 class GetPrayerTimesUseCase @Inject constructor(
-    private val repository: Repository,
-    private val dao: PrayTimesDao
+    private val repository: Repository
 ) {
 
     suspend operator fun invoke(
@@ -28,20 +27,8 @@ class GetPrayerTimesUseCase @Inject constructor(
         methodId: Int
     ): PrayerTimesEntity {
         val prayerTimesUseCaseEntity = repository.getPrayTimes(date, latitude, longitude, methodId)
-        val prayDataBaseEntity = PrayDataBaseEntity(
-            date = date,
-            latitude = latitude,
-            longitude = longitude,
-            method = methodId,
-            fajr = prayerTimesUseCaseEntity.timings.fajr,
-            sunrise = prayerTimesUseCaseEntity.timings.sunrise,
-            dhuhr = prayerTimesUseCaseEntity.timings.dhuhr,
-            asr = prayerTimesUseCaseEntity.timings.asr,
-            maghrib = prayerTimesUseCaseEntity.timings.maghrib,
-            isha = prayerTimesUseCaseEntity.timings.isha
-        )
-        dao.insert(prayDataBaseEntity)
-        Log.e("prayDataBaseEntity",prayDataBaseEntity.toString()+111111111111111111)
+       repository.insertPrayerTimesDataBase(prayerTimesUseCaseEntity)
+        Log.e("prayDataBaseEntity",prayerTimesUseCaseEntity.toString()+111111111111111111)
         return prayerTimesUseCaseEntity
     }
 
@@ -74,27 +61,27 @@ class GetPrayerTimesUseCase @Inject constructor(
             }
 
             currentTime < prayerTimesUiState.sunrise -> {
-                nextPrayerTime = prayerTimesUiState.fajr
+                nextPrayerTime = prayerTimesUiState.sunrise
                 return Pair("Sunrise", nextPrayerTime)
             }
 
             currentTime < prayerTimesUiState.dhuhr -> {
-                nextPrayerTime = prayerTimesUiState.fajr
+                nextPrayerTime = prayerTimesUiState.dhuhr
                 return Pair("Dhuhr", nextPrayerTime)
             }
 
             currentTime < prayerTimesUiState.asr -> {
-                nextPrayerTime = prayerTimesUiState.fajr
+                nextPrayerTime = prayerTimesUiState.asr
                 return Pair("Asr", nextPrayerTime)
             }
 
             currentTime < prayerTimesUiState.maghrib -> {
-                nextPrayerTime = prayerTimesUiState.fajr
+                nextPrayerTime = prayerTimesUiState.maghrib
                 return Pair("Maghrib", nextPrayerTime)
             }
 
             currentTime < prayerTimesUiState.isha -> {
-                nextPrayerTime = prayerTimesUiState.fajr
+                nextPrayerTime = prayerTimesUiState.isha
                 return Pair("Isha", nextPrayerTime)
             }
 
@@ -110,25 +97,27 @@ class GetPrayerTimesUseCase @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun calculateTimeDifference(start: String, end: String): String {
-        // Parse the start and end times into LocalTime objects
         val startTime = LocalTime.parse(start, DateTimeFormatter.ofPattern("HH:mm"))
         val endTime = LocalTime.parse(end, DateTimeFormatter.ofPattern("HH:mm"))
 
-        // Convert the start and end times to minutes
         val startMinutes = startTime.hour * 60 + startTime.minute
         val endMinutes = endTime.hour * 60 + endTime.minute
 
         // Calculate the difference in minutes
         var diffMinutes = endMinutes - startMinutes
         if (diffMinutes < 0) {
-            diffMinutes += 24 * 60 // Add 24 hours if the end time is on the next day
+            diffMinutes += 24 * 60
         }
 
         // Convert the difference back to hours and minutes
-        val hours = diffMinutes / 60
+        var hours = diffMinutes / 60
         val minutes = diffMinutes % 60
+        Log.e("StartTime", "$startTime")
+        Log.e("EndTime", "$endTime")
+
         Log.e("TimeDifference", "${hours}H and ${minutes}min")
         // Format the result as "XH and Ymin"
+       // if (hours>12) hours -= 12
         return "${hours}H ${minutes}min"
     }
 

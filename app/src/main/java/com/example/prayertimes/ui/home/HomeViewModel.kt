@@ -27,43 +27,52 @@ class HomeViewModel @Inject constructor(
         HomeUiState()
     ), HomeListener {
 
-   init {
-       getCurrentTime()
-       getCurrentDate()
-       getDateListForWeek()
-   }
-    private fun getDateListForWeek() {
-       _state.update {
-           it.copy(dateForWeek  =getPrayerTimesUseCase.getDateListForWeek())
-       }
+    init {
+        getCurrentTime()
+        getDateListForWeek()
     }
-fun getNextPrayerData(prayerTimesUiState: HomeUiState.PrayerTimesUiState) {
-    _state.update {
-        it.copy(nextPrayer  = getPrayerTimesUseCase.getNextPrayer(prayerTimesUiState).first,
-            nextPrayerTime  = getPrayerTimesUseCase.getNextPrayer(prayerTimesUiState).second)
 
-    }
-}
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun getTimeLeft(currentTime:String, nextPrayerTime:String){
+    private fun getDateListForWeek() {
         _state.update {
-            it.copy(timeLeft = getPrayerTimesUseCase.calculateTimeDifference(currentTime,nextPrayerTime))
+            it.copy(dateForWeek = getPrayerTimesUseCase.getDateListForWeek())
         }
     }
-    private fun getCurrentDate(){
-       _state.update {
-           it.copy(date = getPrayerTimesUseCase.getCurrentDate())
-       }
+
+    fun getNextPrayerData(prayerTimesUiState: HomeUiState.PrayerTimesUiState) {
+        _state.update {
+            it.copy(
+                nextPrayer = getPrayerTimesUseCase.getNextPrayer(prayerTimesUiState).first,
+                nextPrayerTime = getPrayerTimesUseCase.getNextPrayer(prayerTimesUiState).second
+            )
+
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getTimeLeft(currentTime: String, nextPrayerTime: String) {
+        _state.update {
+            it.copy(
+                timeLeft = getPrayerTimesUseCase.calculateTimeDifference(
+                    currentTime,
+                    nextPrayerTime
+                )
+            )
+        }
+    }
+     fun getCurrentDate() {
+        _state.update {
+            it.copy(date = getPrayerTimesUseCase.getCurrentDate())
+        }
     }
 
 
-    private fun getCurrentTime(){
+    private fun getCurrentTime() {
         _state.update {
             it.copy(currentTime = getPrayerTimesUseCase.getCurrentTime())
         }
     }
 
-        suspend fun getMethods() {
+    suspend fun getMethods() {
         val data: MethodsEntity = getMethodsUseCase()
         Log.e("Home ViewModel", data.gulf.second + data.maka.first)
         tryToExecute(
@@ -102,14 +111,19 @@ fun getNextPrayerData(prayerTimesUiState: HomeUiState.PrayerTimesUiState) {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun onSuccessGetPrayerTimes(prayerTimesUiState: HomeUiState.PrayerTimesUiState) {
+    private fun onSuccessGetPrayerTimes(homeTimesUiState: HomeUiState) {
         _state.update {
-            it.copy(prayerTimes = prayerTimesUiState, isLoading = false)
+            it.copy(
+                prayerTimes = homeTimesUiState.prayerTimes,
+                isLoading = false,
+                dateHijri = homeTimesUiState.dateHijri,
+                date = homeTimesUiState.date
+            )
         }
-        getNextPrayerData(prayerTimesUiState)
-        val currentTime =state.value.currentTime!!
+        getNextPrayerData(homeTimesUiState.prayerTimes)
+        val currentTime = state.value.currentTime!!
         val nextPrayerTime = state.value.nextPrayerTime!!
-        getTimeLeft(currentTime,nextPrayerTime)
+        getTimeLeft(currentTime,nextPrayerTime )
     }
 
     private fun onErrorGetPrayerTimes(e: Throwable) {

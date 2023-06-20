@@ -1,5 +1,6 @@
 package com.example.prayertimes.ui.home
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -29,7 +30,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUiState, HomeUiEvent>
     private val homeFragmentArgs: HomeFragmentArgs by navArgs()
     private lateinit var pagerAdapter: HomeViewPagerAdapter
     private lateinit var nextPrayer: String
-    private lateinit var nextPrayerTime: String
+    private lateinit var address: String
     private lateinit var timeLeft: String
     private lateinit var date: String
 
@@ -39,12 +40,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUiState, HomeUiEvent>
     private var latitude by Delegates.notNull<Double>()
     private var longitude by Delegates.notNull<Double>()
 
-    private lateinit var dateListForWeek:List<String>
+    private lateinit var dateListForWeek: List<String>
     private val prayerTimesListDisplayForWeek = mutableListOf<HomeUiState.PrayerTimesUiState>()
 
     override val layoutIdFragment: Int
         get() = R.layout.fragment_home
     override val viewModel: HomeViewModel by viewModels()
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onEvent(event: HomeUiEvent) {
         lifecycleScope.launch {
@@ -67,36 +69,37 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUiState, HomeUiEvent>
         methodId = homeFragmentArgs.methodId
         latitude = homeFragmentArgs.locationData.latitudeOfRegion
         longitude = homeFragmentArgs.locationData.longitudeOfRegion
-        lifecycleScope.launch {
-            date = viewModel.state.value.date!!
-            dateListForWeek=viewModel.state.value.dateForWeek!!
-            getPrayerTimesDataForWeek(date)
-            nextPrayer = viewModel.state.value.nextPrayer!!
-            nextPrayerTime =viewModel.state.value.nextPrayerTime!!
-            timeLeft = viewModel.state.value.timeLeft!!
-            binding.nextPray.text = nextPrayer
-            binding.location.text = homeFragmentArgs.locationData.addressOfRegion
-            binding.timeLeft.text = timeLeft
-            binding.date.text = date
-            setViewPagerAdapter(prayerTimesListDisplayForWeek)
+        address = homeFragmentArgs.locationData.city + "," + homeFragmentArgs.locationData.country
 
+        lifecycleScope.launch {
+            dateListForWeek = viewModel.state.value.dateForWeek!!
+            getPrayerTimesDataForWeek(viewModel.getCurrentDate().toString())
+            date = viewModel.state.value.date!!
+            nextPrayer = viewModel.state.value.nextPrayer!!
+            timeLeft = viewModel.state.value.timeLeft!!
+            binding.date.text = date
+            binding.location.text = address
+            setViewPagerAdapter(prayerTimesListDisplayForWeek)
 
         }
         goToQiblaScreen()
     }
 
+    @SuppressLint("SuspiciousIndentation")
     @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun getPrayerTimesDataForWeek(date: String) {
-            viewModel.getPrayerTimes(
-                date,
-                latitude,
-                longitude,
-                methodId
-            )
-           val m =viewModel.state.value.prayerTimes
-                 Log.e("Home Fragment", m.toString())
+        viewModel.getPrayerTimes(
+            date,
+            latitude,
+            longitude,
+            methodId
+        )
+        val prayerTimes = viewModel.state.value.prayerTimes
+        Log.e("Home Fragment", prayerTimes.toString())
         prayerTimesListDisplayForWeek
-       if (isNotEmpty(m)) prayerTimesListDisplayForWeek.add(m) else getPrayerTimesDataForWeek(date)
+        if (isNotEmpty(prayerTimes)) prayerTimesListDisplayForWeek.add(prayerTimes) else getPrayerTimesDataForWeek(
+            date
+        )
 
     }
 
@@ -111,40 +114,41 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUiState, HomeUiEvent>
         pagerAdapter.notifyDataSetChanged()
 
     }
-    private var i =0
+
+    private var i = 0
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private  fun clickBackButton() {
+    private fun clickBackButton() {
         lifecycleScope.launch {
             val currentPosition: Int = binding.recyclerViewPager.currentItem
-            if (currentPosition > 0&&prayerTimesListDisplayForWeek.size<8) {
-                date=dateListForWeek[currentPosition-1]
-                binding.date.text=date
+            if (currentPosition > 0 && prayerTimesListDisplayForWeek.size < 8) {
+                binding.date.text = viewModel.state.value.date!!
                 getPrayerTimesDataForWeek(date)
                 setViewPagerAdapter(prayerTimesListDisplayForWeek)
                 binding.recyclerViewPager.currentItem = (currentPosition - 1)
                 pagerAdapter.notifyDataSetChanged()
 
-            }else if(currentPosition < 6&& prayerTimesListDisplayForWeek.size==8){
+            } else if (currentPosition < 6 && prayerTimesListDisplayForWeek.size == 8) {
                 swipeViewPagerBack()
             }
         }
 
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun clickNextButton() {
         lifecycleScope.launch {
             val currentPosition: Int = binding.recyclerViewPager.currentItem
-            if (currentPosition < 6&&prayerTimesListDisplayForWeek.size<8) {
-                date=dateListForWeek[currentPosition+1]
-                binding.date.text=date
+            if (currentPosition < 6 && prayerTimesListDisplayForWeek.size < 8) {
+                date = dateListForWeek[currentPosition + 1]
+                binding.date.text = viewModel.state.value.date!!
                 getPrayerTimesDataForWeek(date)
                 setViewPagerAdapter(prayerTimesListDisplayForWeek)
                 binding.recyclerViewPager.currentItem = (currentPosition + 1)
                 pagerAdapter.notifyDataSetChanged()
-            }else if(currentPosition < 6&& prayerTimesListDisplayForWeek.size==8){
-                date=dateListForWeek[currentPosition+1]
-                binding.date.text=date
+            } else if (currentPosition < 6 && prayerTimesListDisplayForWeek.size == 8) {
+                date = dateListForWeek[currentPosition + 1]
+                binding.date.text = viewModel.state.value.date!!
                 swipeViewPagerNext()
             }
 
@@ -164,22 +168,23 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeUiState, HomeUiEvent>
 
     private fun swipeViewPagerNext() {
         val currentPosition: Int = binding.recyclerViewPager.currentItem
-        if (currentPosition < 6 ) {
+        if (currentPosition < 6) {
             binding.recyclerViewPager.currentItem = (currentPosition + 1)
             pagerAdapter.notifyDataSetChanged()
 
-        }}
-        private fun goToQiblaScreen() {
-            binding.qibla.setOnClickListener {
-                findNavController().navigate(
-                    HomeFragmentDirections.actionHomeFragmentToQiblaFragment(homeFragmentArgs.locationData)
-                )
-            }
         }
-
-
-
     }
+
+    private fun goToQiblaScreen() {
+        binding.qibla.setOnClickListener {
+            findNavController().navigate(
+                HomeFragmentDirections.actionHomeFragmentToQiblaFragment(homeFragmentArgs.locationData)
+            )
+        }
+    }
+
+
+}
 
 
 
