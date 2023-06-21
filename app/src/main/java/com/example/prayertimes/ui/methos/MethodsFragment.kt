@@ -1,4 +1,4 @@
-package com.example.prayertimes.ui.home
+package com.example.prayertimes.ui.methos
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -18,9 +18,10 @@ import androidx.navigation.fragment.findNavController
 import com.example.prayertimes.R
 import com.example.prayertimes.databinding.FragmentMethodsBinding
 import com.example.prayertimes.ui.base.BaseFragment
+import com.example.prayertimes.ui.home.HomeUiEvent
+import com.example.prayertimes.ui.home.HomeUiState
+import com.example.prayertimes.ui.home.HomeViewModel
 import com.example.prayertimes.ui.home.Location.LocationData
-import com.example.prayertimes.ui.methos.MethodsItem
-import com.example.prayertimes.ui.methos.SpinnerAdapter
 import com.example.prayertimes.utils.Connection
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices

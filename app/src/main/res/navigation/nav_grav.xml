@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/methodsFragment"
-        android:name="com.example.prayertimes.ui.home.MethodsFragment"
+        android:name="com.example.prayertimes.ui.methos.MethodsFragment"
         android:label="MethodsFragment" >
        <action
             android:id="@+id/action_methodsFragment_to_homeFragment"
