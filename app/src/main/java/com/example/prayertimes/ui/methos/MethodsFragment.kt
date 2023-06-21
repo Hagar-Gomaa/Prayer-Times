@@ -1,4 +1,4 @@
-package com.example.prayertimes.ui.home
+package com.example.prayertimes.ui.methos
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -18,9 +18,10 @@ import androidx.navigation.fragment.findNavController
 import com.example.prayertimes.R
 import com.example.prayertimes.databinding.FragmentMethodsBinding
 import com.example.prayertimes.ui.base.BaseFragment
+import com.example.prayertimes.ui.home.HomeUiEvent
+import com.example.prayertimes.ui.home.HomeUiState
+import com.example.prayertimes.ui.home.HomeViewModel
 import com.example.prayertimes.ui.home.Location.LocationData
-import com.example.prayertimes.ui.home.methos.MethodsItem
-import com.example.prayertimes.ui.home.methos.SpinnerAdapter
 import com.example.prayertimes.utils.Connection
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -68,11 +69,17 @@ class MethodsFragment : BaseFragment<FragmentMethodsBinding, HomeUiState, HomeUi
                     )
                     methodId = it.methodId!!.toInt()
                 }
-                spinnerList = listOf(MethodsItem(item = Pair(2, "qater")))
-                setSpinnerAdapter(spinnerList)
-                binding.spinner.adapter = spinnerAdapter
-                selectMethod()
-                submit()
+                findNavController().navigate(
+                    MethodsFragmentDirections.actionMethodsFragmentToHomeFragment(
+                        methodId!!,
+                        locationData
+                    )
+                )
+//                spinnerList = listOf(MethodsItem(item = Pair(2, "qater")))
+//                setSpinnerAdapter(spinnerList)
+//                binding.spinner.adapter = spinnerAdapter
+//                selectMethod()
+//                submit()
 
             }
         }
@@ -120,9 +127,9 @@ class MethodsFragment : BaseFragment<FragmentMethodsBinding, HomeUiState, HomeUi
         )
     }
 
-    fun submit() {
+    private fun submit() {
         binding.submitButton.setOnClickListener {
-            if (locationData.addressOfRegion.isNotEmpty() && selectedItem.item.second.isNotEmpty()) {
+            if (locationData.addressOfRegion.isNotEmpty() && selectedItem.item.second.isNotEmpty() ) {
                 methodId = selectedItem.item.first
 
                 findNavController().navigate(
@@ -131,7 +138,8 @@ class MethodsFragment : BaseFragment<FragmentMethodsBinding, HomeUiState, HomeUi
                         locationData
                     )
                 )
-            } else {
+            }
+            else {
                 requestPermissionLocation()
                 Toast.makeText(
                     requireContext(), "Please, check Your Network ", Toast.LENGTH_SHORT

@@ -17,32 +17,18 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <!--    <ImageButton-->
-        <!--        android:id="@+id/backButton"-->
-        <!--        android:layout_width="wrap_content"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:layout_marginStart="8dp"-->
-        <!--        android:background="@null"-->
-        <!--        android:elevation="10dp"-->
-        <!--        android:minWidth="48dp"-->
-        <!--        android:layout_marginTop="10dp"-->
-        <!--        android:minHeight="48dp"-->
-        <!--        android:padding="10dp"-->
-        <!--        android:onClick="@{() -> viewModel.onClickArrowBack()"-->
-        <!--        app:layout_constraintTop_toTopOf="parent"-->
-        <!--        app:layout_constraintStart_toStartOf="parent"-->
-        <!--        app:srcCompat="@drawable/ic_back" />-->
+        android:layout_height="match_parent"
+        android:background="#42B7B2B3">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/salat_table"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="24dp"
+            android:layout_width="366dp"
+            android:layout_height="183dp"
+            android:layout_margin="16dp"
             android:backgroundTint="#1D6000"
-            app:cardCornerRadius="24dp"
+            app:cardCornerRadius="16dp"
             app:contentPadding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -64,55 +50,37 @@
                         android:id="@+id/date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@{viewModel.state.date}"
                         android:textColor="@color/white"
                         android:textSize="20sp"
-android:text="@{viewModel.state.date}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="DEC 25 2024" />
 
+
                     <TextView
                         android:id="@+id/location"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
                         android:ellipsize="end"
                         android:gravity="center_horizontal"
                         android:maxLines="1"
-                        android:text=""
                         android:textColor="@color/white"
-                        android:textSize="20sp"
-                        app:layout_constraintEnd_toStartOf="@+id/next"
-                        app:layout_constraintStart_toEndOf="@+id/previous"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/date"
                         tools:text="Cairo,Egypt" />
 
-                    <ImageView
-                        android:id="@+id/previous"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="@{() -> viewModel.onClickArrowBack()}"
-                        android:src="@drawable/ic_back"
-                        app:layout_constraintBottom_toTopOf="@+id/location"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/next"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="@{() -> viewModel.onClickArrowNext()}"
-                        android:src="@drawable/ic_next"
-                        app:layout_constraintBottom_toTopOf="@+id/location"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
                     android:id="@+id/line"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height=".5dp"
                     android:layout_marginTop="16dp"
                     android:background="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -132,27 +100,30 @@ android:text="@{viewModel.state.date}"
                         android:id="@+id/next_pray"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
                         android:text="@{viewModel.state.nextPrayer}"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="normal"
+                        app:layout_constraintBottom_toTopOf="@id/next_pray_text"
+                        app:layout_constraintEnd_toStartOf="@id/time_left"
+                        app:layout_constraintHorizontal_chainStyle="spread"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
                         tools:text="ISHA" />
 
                     <TextView
                         android:id="@+id/next_pray_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
                         android:text="@string/next_pray"
                         android:textColor="@color/white"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/next_pray"
+                        app:layout_constraintEnd_toStartOf="@+id/time_left"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        app:layout_constraintTop_toBottomOf="@id/next_pray"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="1.0">
 
                     </TextView>
 
@@ -160,11 +131,12 @@ android:text="@{viewModel.state.date}"
                         android:id="@+id/time_left_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="time left"
+                        android:text="@string/time_left"
+                        android:textSize="@dimen/_16sp"
                         android:textColor="@color/white"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/next_pray"
-                        app:layout_constraintTop_toTopOf="parent">
+                        app:layout_constraintTop_toBottomOf="@id/time_left">
 
                     </TextView>
 
@@ -172,12 +144,12 @@ android:text="@{viewModel.state.date}"
                         android:id="@+id/time_left"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@{viewModel.state.timeLeft}"
                         android:textColor="@color/white"
                         android:textSize="20sp"
-                        android:text="@{viewModel.state.timeLeft}"
+                        app:layout_constraintBottom_toTopOf="@+id/time_left_text"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/next_pray"
-                        app:layout_constraintTop_toBottomOf="@+id/time_left_text"
                         tools:text="1 hr 16 min">
 
                     </TextView>
@@ -187,35 +159,69 @@ android:text="@{viewModel.state.date}"
 
         </androidx.cardview.widget.CardView>
 
+        <ImageView
+            android:id="@+id/previous"
+            android:layout_width="38dp"
+            android:layout_height="56dp"
+            android:layout_margin="16dp"
+            android:onClick="@{() -> viewModel.onClickArrowBack()}"
+            android:src="@drawable/ic_back"
+            app:layout_constraintBottom_toTopOf="@+id/recycler_view_pager"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/salat_table"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ImageView
+            android:id="@+id/next"
+            android:layout_width="38dp"
+            android:layout_height="56dp"
+            android:layout_margin="16dp"
+            android:onClick="@{() -> viewModel.onClickArrowNext()}"
+            android:src="@drawable/ic_next"
+            app:layout_constraintBottom_toTopOf="@+id/recycler_view_pager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/salat_table"
+            app:layout_constraintVertical_bias="0.0" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/recycler_view_pager"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:padding="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="330dp"
+            android:layout_marginHorizontal="@dimen/_16sp"
+            android:layout_marginTop="80dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.718"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/salat_table"
-            app:layout_constraintVertical_bias="0.052" />
+            app:layout_constraintTop_toBottomOf="@+id/salat_table" />
 
         <Button
             android:id="@+id/qibla"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:elevation="5dp"
-            android:textSize="13sp"
-            android:textColor="@color/white"
-            android:background="@drawable/ic_face"
+            android:layout_width="188dp"
+            android:layout_height="54dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="56dp"
+            android:backgroundTint="@color/green"
             android:text="@string/show_qibla_diriction_on_map"
+            android:textColor="@color/white"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/recycler_view_pager" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
 </layout>
+
+
+    <!--        <ProgressBar-->
+    <!--            android:id="@+id/progressBar"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            app:isVisible="@{viewModel.state.loading}"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toTopOf="parent" />-->
